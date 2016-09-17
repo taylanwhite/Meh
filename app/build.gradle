@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 
+
 android {
     compileSdkVersion 24
     buildToolsVersion "23.0.0"
@@ -24,6 +25,9 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -32,7 +36,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
-
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
     compile 'org.glassfish:javax.annotation:10.0-b28'
 
     //RxAndroid
@@ -40,11 +44,19 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
 
+
+
+
     //Realm
     compile 'io.realm:realm-android:0.87.4'
 
-
-
+    //kapt
+    kapt 'com.android.databinding:compiler:1.0-rc4'
+    kapt "io.realm:realm-annotations:0.87.4"
+    kapt "io.realm:realm-annotations-processor:0.87.4"
+    kapt 'com.android.databinding:compiler:1.0-rc4'
+    //Glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -57,7 +69,12 @@ dependencies {
 
 
 
+
 }
 repositories {
     mavenCentral()
+}
+
+kapt {
+    generateStubs = true
 }
