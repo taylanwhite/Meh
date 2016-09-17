@@ -55,7 +55,7 @@ public class ProductAdapter extends ArrayAdapter<DailyProduct> {
         vh.textViewName.setText(item.getTitle());
         vh.textViewPrice.setText(item.getPrice());
         vh.textViewSpecs.setText(item.getSpecs());
-        //Picasso.with(context).load(item.get()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
+    //    Picasso.with(context).load(item.get()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
 
         return vh.rootView;
     }

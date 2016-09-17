@@ -2,25 +2,34 @@ package com.example.taylanwhite.meh
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 
 /**
  * Created by taylanwhite on 9/16/16.
  */
+@RealmClass
+open class DailyProduct : RealmObject(){
 
-class DailyProduct {
+    @PrimaryKey
+    @SerializedName("id")
+    @Expose
+    open var id: Int = 0
+
 
     @SerializedName("title")
     @Expose
-    var title: String? = null
+    open var title: String? = null
 
 
     @SerializedName("price")
     @Expose
-    var price: String? = null
+    open var price: String? = null
 
     @SerializedName("specifications")
     @Expose
-    var specs: String? = null
+    open var specs: String? = null
 
     @SerializedName("photos")
     @Expose

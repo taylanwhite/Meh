@@ -11,17 +11,13 @@ import retrofit2.http.GET
 
 object RetroClient {
 
-    private val ROOT_URL = "https://api.meh.com/1/current.json?apikey="
-
+    private val ROOT_URL = "https://api.meh.com/1/current.json?apikey=ZXzByssyPuglD85cLS1WJrwKda4ik9s0"
     private val retrofitInstance: Retrofit
         get() = Retrofit.Builder().baseUrl(ROOT_URL).addConverterFactory(GsonConverterFactory.create()).build()
 
     interface ApiService {
 
-        /*
-        Retrofit get annotation with our URL
-        And our method that will return us the List of ContactList
-        */
+
         val myJSON: Call<ProductList>
     }
 
