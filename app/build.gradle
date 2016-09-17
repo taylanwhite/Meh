@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 
 
 
+
 android {
     compileSdkVersion 24
     buildToolsVersion "23.0.0"
@@ -25,9 +26,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    dataBinding {
-        enabled = true
-    }
+
 }
 
 dependencies {
@@ -45,6 +44,8 @@ dependencies {
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
 
 
+    //databinding
+    compile 'com.android.tools.build:gradle:1.3.0-beta1'
 
 
     //Realm

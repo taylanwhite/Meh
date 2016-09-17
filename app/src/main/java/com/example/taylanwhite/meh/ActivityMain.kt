@@ -3,8 +3,6 @@ package com.example.taylanwhite.meh
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.TextView
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
@@ -17,25 +15,23 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import com.minimize.android.rxretrorealm.databinding.ActivityMainBinding
+
 import android.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 
 
 
 
-
 class ActivityMain : AppCompatActivity() {
     //var BASE_URL = "ZXzByssyPuglD85cLS1WJrwKda4ik9s0"
-    //var retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-    //txtName.setText("test")
-    //txtPrice.setText("22")
-    //txtDescription.setText("..")
+
     //"https://api.meh.com/1/current.json?apikey=ZXzByssyPuglD85cLS1WJrwKda4ik9s0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,
                 R.layout.activity_main)
