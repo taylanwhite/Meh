@@ -18,8 +18,7 @@ import rx.schedulers.Schedulers
 
 import android.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
-
-
+import com.example.taylanwhite.meh.databinding.ActivityMainBinding
 
 
 class ActivityMain : AppCompatActivity() {
