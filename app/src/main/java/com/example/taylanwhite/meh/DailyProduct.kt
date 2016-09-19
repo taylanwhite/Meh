@@ -33,7 +33,8 @@ open class DailyProduct : RealmObject(){
 
     @SerializedName("photos")
     @Expose
-    open val photos: String? = null
+    open var photos: String? = null
 
 
 }
+
