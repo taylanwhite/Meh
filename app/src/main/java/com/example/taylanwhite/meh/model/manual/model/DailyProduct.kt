@@ -1,4 +1,4 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.model.manual.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
