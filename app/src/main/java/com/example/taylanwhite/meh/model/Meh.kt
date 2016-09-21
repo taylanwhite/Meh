@@ -3,7 +3,7 @@ package com.example.taylanwhite.meh.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Meh {
+open class Meh {
 
     @SerializedName("deal")
     @Expose

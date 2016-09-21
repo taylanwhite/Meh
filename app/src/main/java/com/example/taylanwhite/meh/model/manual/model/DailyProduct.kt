@@ -18,22 +18,26 @@ open class DailyProduct : RealmObject(){
     open var id: Int = 0
 
 
-    @SerializedName("title")
-    @Expose
-    open var title: String? = null
-
-
-    @SerializedName("price")
-    @Expose
-    open var price: String? = null
-
-    @SerializedName("specifications")
-    @Expose
-    open var specs: String? = null
-
-    @SerializedName("photos")
-    @Expose
-    open var photos: String? = null
+//    @SerializedName("title")
+//    @Expose
+//    open var title: String? = null
+//
+//
+//    @SerializedName("price")
+//    @Expose
+//    open var price: String? = null
+//
+//    @SerializedName("specifications")
+//    @Expose
+//    open var specs: String? = null
+//
+//    @SerializedName("url")
+//    @Expose
+//    open var url: String? = null
+//
+//    @SerializedName("photos")
+//    @Expose
+//    open var photos: String? = null
 
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Deal {
+open class Deal {
 
     @SerializedName("features")
     @Expose
@@ -28,7 +28,7 @@ class Deal {
 
     @SerializedName("title")
     @Expose
-    var title: String? = null
+    open var title: String? = null
 
     @SerializedName("specifications")
     @Expose

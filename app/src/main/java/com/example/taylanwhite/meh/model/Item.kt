@@ -4,7 +4,7 @@ import java.util.ArrayList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Item {
+open class Item {
 
     @SerializedName("attributes")
     @Expose
