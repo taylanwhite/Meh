@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        btnNotication.setOnClickListener {
-            val noti = Notification.Builder(this).setContentTitle("New mail from " ).build()
-            val intent = Intent(this, MainActivity::class.java)
-        }
-
+//        btnNotication.setOnClickListener {
+//            val noti = Notification.Builder(this).setContentTitle("New mail from " ).build()
+//            val intent = Intent(this, MainActivity::class.java)
+//        }
+//
 
 
 

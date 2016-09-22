@@ -39,13 +39,13 @@
                 android:layout_weight="0.61" />
 
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Test Notification"
-                android:id="@+id/btnNotication"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.61" />
+            <!--<Button-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Test Notification"-->
+                <!--android:id="@+id/btnNotication"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_weight="0.61" />-->
 
             <ImageButton
                 android:id="@+id/imageDeal"
@@ -54,12 +54,11 @@
                 android:layout_weight="0.61"
                 android:adjustViewBounds="true"
                 android:background="@null"
-                android:maxHeight="750px"
+                android:maxHeight="1000px"
                 android:maxWidth="750px"
-                android:minHeight="750px"
+                android:minHeight="1000px"
                 android:minWidth="750px"
                 android:scaleType="fitXY"
-                app:srcCompat="@mipmap/ic_launcher"
 
                 />
 
