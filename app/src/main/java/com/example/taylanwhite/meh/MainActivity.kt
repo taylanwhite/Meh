@@ -1,17 +1,21 @@
 package com.example.taylanwhite.meh
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Color
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.example.taylanwhite.meh.model.Deal
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
+import com.squareup.picasso.Picasso
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmQuery
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         fetchData()
 
         btnPastDeals.setOnClickListener {
@@ -43,10 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        btnBuy.setOnClickListener {
 
-
-        }
 
 
 
@@ -63,10 +65,28 @@ class MainActivity : AppCompatActivity() {
                     response?.body()!!.let { response ->
 
 
+
                         txtName.text = response.deal.title
                         txtPrice.text = "Price:" + response.deal.items[0].price.toString()
-                        txtDescription.text = response.deal.features
+                        txtDescription.text = response.deal.specifications
                       //  imageDeal.setImageResource() =
+                       // response.deal.items[0].photo?.
+                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
+
+
+                        btnBuy.setOnClickListener {
+
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.setData(Uri.parse(response.deal.url))
+                                startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
+                        currentLayout.setBackgroundColor(Color.parseColor(response.deal.theme?.backgroundColor))
                     }
 
 
