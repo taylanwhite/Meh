@@ -1,11 +1,17 @@
 package com.example.taylanwhite.meh
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.NotificationCompat
 import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
@@ -38,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-
         fetchData()
 
         btnPastDeals.setOnClickListener {
@@ -46,6 +51,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,PastDeals::class.java)
             startActivity(intent)
 
+        }
+
+        btnNotication.setOnClickListener {
+            val noti = Notification.Builder(this).setContentTitle("New mail from " ).build()
+            val intent = Intent(this, MainActivity::class.java)
         }
 
 
@@ -67,15 +77,14 @@ class MainActivity : AppCompatActivity() {
                 if(response?.isSuccessful ?: false) {
                     response?.body()!!.let { response ->
 
-
-
                         txtName.text = response.deal.title
-                        txtPrice.text = "Price:" + response.deal.items[0].price.toString()
-                        txtDescription.text = response.deal.specifications
+                        txtPrice.text = "Price: $" + response.deal.items[0].price.toString()
+                        txtDescription.text = response.deal.features
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
 
+                        //Handles photos
                         imageDeal.setOnClickListener {
 
                             if (i >= response.deal.photos.size)
@@ -88,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
                         }
 
-
+                        //Handles button for going to meh website
                         btnBuy.setOnClickListener {
 
                             try {
@@ -100,41 +109,29 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
+                        btnMovie.setOnClickListener {
+                            try {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(response.video.url)
+                            //    intent.data = Uri.parse(response.deal.video?.url)
+                            startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        //Handles theme layout
                         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
                         currentLayout.setBackgroundColor(Color.parseColor(response.deal.theme?.backgroundColor))
 
 
-//                        val mImageSwitcherPicasso = ImageSwitcherPicasso(this@MainActivity, imageSwitcher)
-//                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(mImageSwitcherPicasso)
-//
-//                       // val image = Picasso.with(this@MainActivity).load(response.deal.photos[0])
-                        //val mImageSwitcherPicasso = ImageSwitcherPicasso(this@MainActivity, imageSwitcher)
-                        //
-                        //  imageSwitcher.setImageResource(image)
-
-
                     }
-
-
                 }
-                else {
-
-                }
-
             }
-
             override fun onFailure(call: Call<DealObject>?, t: Throwable?) {
                 throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-
-
-
-
-
-
         })
-
-
     }
 
 

@@ -50,4 +50,7 @@ open class Deal {
     @Expose
     var topic: Topic? = null
 
+
+
+
 }
