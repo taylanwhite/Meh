@@ -1,6 +1,7 @@
 package com.example.taylanwhite.meh
 
 import com.example.taylanwhite.meh.model.Deal
+import com.example.taylanwhite.meh.model.Topic
 import com.example.taylanwhite.meh.model.Video
 
 /**

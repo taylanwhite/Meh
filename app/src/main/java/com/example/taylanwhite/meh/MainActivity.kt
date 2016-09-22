@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
@@ -43,7 +44,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Underline txtMoreSpecs
+        txtMoreSpecs.setPaintFlags(txtMoreSpecs.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
 
+        //Call function for data call
         fetchData()
 
         btnPastDeals.setOnClickListener {
@@ -115,6 +119,17 @@ class MainActivity : AppCompatActivity() {
                                 intent.data = Uri.parse(response.video.url)
                             //    intent.data = Uri.parse(response.deal.video?.url)
                             startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        txtMoreSpecs.setOnClickListener{
+
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(response.deal.topic?.url)
+                                startActivity(intent)
                             } catch (e: ActivityNotFoundException) {
                                 e.printStackTrace()
                             }
