@@ -3,6 +3,7 @@ package com.example.taylanwhite.meh
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -15,14 +16,17 @@ import android.os.Bundle
 import android.support.v7.app.NotificationCompat
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.example.taylanwhite.meh.model.Deal
+import com.example.taylanwhite.meh.model.Video
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.Picasso
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.RealmObject
 import io.realm.RealmQuery
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,6 +48,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Realm myRealm = Realm.getInstance(this@MainActivity)
+//        val realm = Realm.getInstance(context)
+//        realm.beginTransaction()
+//        val video = realm.createObject(Video::class.java)
+//
+//        realm.commitTransaction()
+
+
         //Underline txtMoreSpecs
         txtMoreSpecs.setPaintFlags(txtMoreSpecs.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
 
@@ -52,22 +64,12 @@ class MainActivity : AppCompatActivity() {
 
         btnPastDeals.setOnClickListener {
 
-            val intent = Intent(this,PastDeals::class.java)
+            val intent = Intent(this, PastDeals::class.java)
             startActivity(intent)
 
         }
 
-//        btnNotication.setOnClickListener {
-//            val noti = Notification.Builder(this).setContentTitle("New mail from " ).build()
-//            val intent = Intent(this, MainActivity::class.java)
-//        }
-//
-
-
-
-
-
-        }
+    }
 
 
     fun fetchData()
@@ -135,6 +137,33 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
+
+
+                        btnNotification.setOnClickListener {
+
+                            var firstPicture = response.deal.photos[0]
+                            var testPicture = Picasso.with(this@MainActivity).load(response.deal.photos[0])
+                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setSmallIcon(R.mipmap.ic_launcher).setContentTitle(response.deal.title).setContentText(response.deal.items[0].price.toString()
+                            )
+                            val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
+                            val resultPendingIntent = PendingIntent.getActivity(
+                                    this@MainActivity,
+                                    0,
+                                    resultIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT)
+                            mBuilder.setContentIntent(resultPendingIntent)
+                            // Sets an ID for the notification
+                            val mNotificationId = 1
+                            // Gets an instance of the NotificationManager service
+                            val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                            // Builds the notification and issues it.
+                            mNotifyMgr.notify(mNotificationId, mBuilder.build())
+
+
+
+
+                        }
+
                         //Handles theme layout
                         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
                         currentLayout.setBackgroundColor(Color.parseColor(response.deal.theme?.backgroundColor))
@@ -146,6 +175,8 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<DealObject>?, t: Throwable?) {
                 throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
+
+
         })
     }
 

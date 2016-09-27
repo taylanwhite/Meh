@@ -2,8 +2,9 @@ package com.example.taylanwhite.meh.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
 
-open class Video {
+open class Video : RealmObject(){
 
 
     @SerializedName("id")
@@ -23,8 +24,8 @@ open class Video {
     @Expose
     var url: String? = null
 
-    @SerializedName("topic")
-    @Expose
-    var topic: Topic? = null
+//    @SerializedName("topic")
+//    @Expose
+//    var topic: Topic? = null
 
 }
