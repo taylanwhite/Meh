@@ -1,23 +1,20 @@
 package com.example.taylanwhite.meh
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.app.*
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.NotificationCompat
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.taylanwhite.meh.model.Deal
 import com.example.taylanwhite.meh.model.Video
@@ -29,6 +26,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmObject
 import io.realm.RealmQuery
+import kotlinx.android.synthetic.main.action_bar.*
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +38,9 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,16 +49,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Realm myRealm = Realm.getInstance(this@MainActivity)
-//        val realm = Realm.getInstance(context)
-//        realm.beginTransaction()
-//        val video = realm.createObject(Video::class.java)
-//
-//        realm.commitTransaction()
+        val mActionBar = supportActionBar
+        mActionBar?.setDisplayShowHomeEnabled(false)
+        mActionBar?.setDisplayShowTitleEnabled(false)
+        val mInflater = LayoutInflater.from(this)
+        val mCustomView = mInflater.inflate(R.layout.action_bar, null)
+        mActionBar?.customView = mCustomView
+        mActionBar?.setDisplayShowCustomEnabled(true)
+        val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
+        mTitleTextView.text = "Settings"
+
+
+        mTitleTextView.setOnClickListener {
+            val dialog = Dialog(this@MainActivity)
+            dialog.setTitle("Settings")
+            dialog.setContentView(R.layout.custom_dialogue_layout)
+            dialog.show()
+        }
+
+
+
 
 
         //Underline txtMoreSpecs
-        txtMoreSpecs.setPaintFlags(txtMoreSpecs.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
+        txtMoreSpecs.paintFlags = txtMoreSpecs.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         //Call function for data call
         fetchData()
@@ -141,9 +156,10 @@ class MainActivity : AppCompatActivity() {
 
                         btnNotification.setOnClickListener {
 
-                            var firstPicture = response.deal.photos[0]
-                            var testPicture = Picasso.with(this@MainActivity).load(response.deal.photos[0])
-                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setSmallIcon(R.mipmap.ic_launcher).setContentTitle(response.deal.title).setContentText(response.deal.items[0].price.toString()
+                            val url = URL(response.deal.photos[0])
+                            val image = BitmapFactory.decodeStream(url.openConnection().inputStream)
+                            //setLargeIcon(image)
+                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setLargeIcon(image).setContentTitle(response.deal.title).setContentText(response.deal.items[0].price.toString()
                             )
                             val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
                             val resultPendingIntent = PendingIntent.getActivity(
@@ -158,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                             val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                             // Builds the notification and issues it.
                             mNotifyMgr.notify(mNotificationId, mBuilder.build())
+
 
 
 
@@ -180,6 +197,57 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    fun getBitmapFromURL(src: String): Bitmap? {
+        try {
+            val url = URL(src)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.getInputStream()
+            val myBitmap = BitmapFactory.decodeStream(input)
+            return myBitmap
+        } catch (e: IOException) {
+            // Log exception
+            return null
+        }
+
+    }
+
+
+    fun realmHandle()
+    {
+
+//        val obj = Deal()
+//
+//        val realm = Realm.getDefaultInstance()
+//
+//        // Persist your data in a transaction
+//        realm.beginTransaction()
+//
+//
+//
+//        realm.commitTransaction()
+//
+//        realm.executeTransactionAsync(Realm.Transaction {
+//
+//        }, Realm.Transaction.OnSuccess {
+//
+//        })
+    }
+
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//
+//        return true
+//    }
+//
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//
+//
+//        return true
+//    }
 
 
 
