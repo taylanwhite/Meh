@@ -30,10 +30,7 @@ open class PastDeals : AppCompatActivity() {
 
         }
 
-        btnNot.setOnClickListener {
 
-
-        }
 
     }
 

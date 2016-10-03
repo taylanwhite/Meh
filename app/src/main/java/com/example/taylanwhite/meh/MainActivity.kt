@@ -5,16 +5,14 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.NotificationCompat
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.example.taylanwhite.meh.model.Deal
 import com.example.taylanwhite.meh.model.Video
@@ -28,6 +26,7 @@ import io.realm.RealmObject
 import io.realm.RealmQuery
 import kotlinx.android.synthetic.main.action_bar.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.custom_dialogue_layout.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +44,8 @@ import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,16 +57,22 @@ class MainActivity : AppCompatActivity() {
         val mCustomView = mInflater.inflate(R.layout.action_bar, null)
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
+        mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#A9A9A9")))
         val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
+
         mTitleTextView.text = "Settings"
 
 
-        mTitleTextView.setOnClickListener {
-            val dialog = Dialog(this@MainActivity)
-            dialog.setTitle("Settings")
-            dialog.setContentView(R.layout.custom_dialogue_layout)
-            dialog.show()
-        }
+
+
+       mTitleTextView.setOnClickListener {
+           settingsFun()
+
+       }
+
+
+
+
 
 
 
@@ -104,6 +111,9 @@ class MainActivity : AppCompatActivity() {
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
+
+
+
 
                         //Handles photos
                         imageDeal.setOnClickListener {
@@ -184,6 +194,11 @@ class MainActivity : AppCompatActivity() {
                         //Handles theme layout
                         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
                         currentLayout.setBackgroundColor(Color.parseColor(response.deal.theme?.backgroundColor))
+//                        btnPastDeals.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
+//                        btnBuy.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
+//                        btnMovie.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
+                        //btnClearData.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
+
 
 
                     }
@@ -214,26 +229,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun realmHandle()
-    {
 
-//        val obj = Deal()
+        fun settingsFun()
+        {
+//            val container = findViewById(R.id.main_layout) as RelativeLayout
 //
-//        val realm = Realm.getDefaultInstance()
-//
-//        // Persist your data in a transaction
-//        realm.beginTransaction()
-//
-//
-//
-//        realm.commitTransaction()
-//
-//        realm.executeTransactionAsync(Realm.Transaction {
-//
-//        }, Realm.Transaction.OnSuccess {
-//
-//        })
-    }
+//            val view = View.inflate(this, R.layout.custom_dialogue_layout, container)
+
+            val dialog = Dialog(this@MainActivity)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.custom_dialogue_layout)
+            dialog.show()
+
+            //val btnDialogBack = findViewById(view.id.)
+            val btnToggleNots = dialog.findViewById(R.id.tglNotifications)
+            val btnDialogBack = dialog.findViewById(R.id.btnDialogueBack)
+            val clearData = dialog.findViewById(R.id.btnClearData)
+
+
+            btnDialogBack.setOnClickListener {
+            dialog.cancel()
+            }
+
+        }
+
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        // Inflate the menu; this adds items to the action bar if it is present.
