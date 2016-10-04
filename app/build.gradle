@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.example.taylanwhite.meh"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }

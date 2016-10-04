@@ -16,8 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.HttpURLConnection
 import java.net.URL
 
 
@@ -41,8 +39,8 @@ class MainActivity : AppCompatActivity() {
 
         mTitleTextView.text = "Settings"
 
-
-
+        //handle loading screen
+        loadingScreen()
 
        mTitleTextView.setOnClickListener {
            settingsFun()
@@ -60,8 +58,7 @@ class MainActivity : AppCompatActivity() {
         //Underline txtMoreSpecs
         txtMoreSpecs.paintFlags = txtMoreSpecs.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
-        //Call function for data call
-        fetchData()
+
 
         btnPastDeals.setOnClickListener {
 
@@ -145,12 +142,12 @@ class MainActivity : AppCompatActivity() {
 
                         btnNotification.setOnClickListener {
 
-                            val url = URL(response.deal.photos[0])
-                            val image = BitmapFactory.decodeStream(url.openConnection().inputStream)
                             //setLargeIcon(image)
-                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setLargeIcon(image).setContentTitle(response.deal.title).setContentText(response.deal.items[0].price.toString()
-                            )
+                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setAutoCancel(true).setSmallIcon(R.mipmap.notification_icon).setContentTitle(response.deal.title).setContentText("Price= $" + response.deal.items[0].price.toString())
+
                             val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
+
+
                             val resultPendingIntent = PendingIntent.getActivity(
                                     this@MainActivity,
                                     0,
@@ -163,9 +160,6 @@ class MainActivity : AppCompatActivity() {
                             val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                             // Builds the notification and issues it.
                             mNotifyMgr.notify(mNotificationId, mBuilder.build())
-
-
-
 
 
                         }
@@ -189,22 +183,6 @@ class MainActivity : AppCompatActivity() {
 
 
         })
-    }
-
-    fun getBitmapFromURL(src: String): Bitmap? {
-        try {
-            val url = URL(src)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input = connection.getInputStream()
-            val myBitmap = BitmapFactory.decodeStream(input)
-            return myBitmap
-        } catch (e: IOException) {
-            // Log exception
-            return null
-        }
-
     }
 
 
@@ -232,20 +210,24 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    fun loadingScreen()
+    {
+        if(txtName.text.toString().trim().length == 0)
+        {
+            val dialog = Dialog(this@MainActivity)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.loading_layout)
+            dialog.show()
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//
-//        return true
-//    }
-//
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//
-//
-//        return true
-//    }
+
+            //Call function for data call
+            fetchData()
+
+            dialog.cancel()
+        }
+
+    }
+
 
 
 

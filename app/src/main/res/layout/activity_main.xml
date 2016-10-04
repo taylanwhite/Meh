@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.03"
                 android:ems="10"
-                android:text="Name"
+                android:text=""
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.03"
                 android:ems="10"
-                android:text="Price"
+                android:text=""
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
@@ -101,7 +101,7 @@
                 android:layout_weight="0.03"
                 android:ems="10"
                 android:textSize="17sp"
-                android:text="Description"
+                android:text=""
                 android:padding="10dp"/>
             <TextView
                 android:id="@+id/txtMoreSpecs"
