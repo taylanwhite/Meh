@@ -3,7 +3,6 @@ package com.example.taylanwhite.meh.model
 import java.util.ArrayList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import io.realm.RealmObject
 
 open class Deal {
 

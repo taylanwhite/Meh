@@ -1,20 +1,8 @@
 package com.example.taylanwhite.meh
-
-import android.content.Intent
-import android.database.Observable
-import android.graphics.Movie
-import com.example.taylanwhite.meh.model.Deal
-//import com.example.taylanwhite.meh.model.manual.model.DailyProduct
-import com.google.gson.GsonBuilder
 import retrofit2.Call
-
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**

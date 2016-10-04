@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -38,8 +37,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
 
-    //Realm
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //retrofit
     compile 'com.google.code.gson:gson:2.6.2'
@@ -57,6 +54,7 @@ dependencies {
 
     //glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 repositories {
     mavenCentral()
