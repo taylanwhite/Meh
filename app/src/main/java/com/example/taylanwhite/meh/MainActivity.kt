@@ -9,19 +9,26 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.NotificationCompat
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.*
+import com.example.taylanwhite.meh.model.Deal
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
 
     var toggleChecked = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
         mTitleTextView.text = "Settings"
 
+
+
         //handle loading screen
         loadingScreen()
 
@@ -44,15 +53,6 @@ class MainActivity : AppCompatActivity() {
            settingsFun()
 
        }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -74,7 +74,9 @@ class MainActivity : AppCompatActivity() {
     fun fetchData()
     {
         var i = 1
-        var controller = DatabaseHelper(this)
+
+
+        val controller = DatabaseHelper(this)
 
         MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject>{
 
@@ -82,21 +84,19 @@ class MainActivity : AppCompatActivity() {
 
                 if(response?.isSuccessful ?: false) {
                     response?.body()!!.let { response ->
-                        var fastTitle = response.deal.title
-                        var fastPrice = "Price: $" + response.deal.items[0].price.toString()
-                        var fastDescription = response.deal.features
-                        var buyURL = response.deal.url
-                        var movieURL = response.video.url
-                        var specURL = response.deal.topic?.url
-                        var fastBackground = response.deal.theme?.backgroundColor
+                        val fastTitle = response.deal.title
+                        val  fastPrice = "Price: $" + response.deal.items[0].price.toString()
+                        val fastDescription = response.deal.features
+                        val buyURL = response.deal.url
+                        val movieURL = response.video.url
+                        val specURL = response.deal.topic?.url
+                        val fastBackground = response.deal.theme?.backgroundColor
                         txtName.text = fastTitle
                         txtPrice.text = fastPrice
                         txtDescription.text = fastDescription
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
-
-
 
 
                         //Handles photos
@@ -181,15 +181,8 @@ class MainActivity : AppCompatActivity() {
 //                        btnMovie.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
                         //btnClearData.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
 
-
                                  controller.insert_deal(movieURL.toString(), fastTitle.toString(), fastPrice.toString(), fastDescription.toString(), specURL.toString(), buyURL.toString(), toggleChecked, response.deal.photos[0], fastBackground.toString()  )
                         controller.list_all_deals()
-
-
-
-
-
-
 
 
 

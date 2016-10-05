@@ -4,7 +4,9 @@ import java.util.ArrayList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-open class Deal {
+open class Deal(fastTitle: String?, fastDescription: String?) {
+
+
 
 
     @SerializedName("features")
