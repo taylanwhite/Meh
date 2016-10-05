@@ -41,19 +41,26 @@ class MainActivity : AppCompatActivity() {
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
         mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#A9A9A9")))
-        val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
-        mTitleTextView.text = "Settings"
+        val mTitleSettings = mCustomView.findViewById(R.id.txtSettings) as TextView
+        mTitleSettings.text = "Settings"
+        val mTitleBack = mCustomView.findViewById(R.id.txtBack) as TextView
+        mTitleBack.text = "Past Deals"
 
 
 
         //handle loading screen
         loadingScreen()
 
-       mTitleTextView.setOnClickListener {
-           settingsFun()
+        mTitleSettings.setOnClickListener {
+            settingsFun()
 
-       }
+        }
+        mTitleBack.setOnClickListener {
 
+            val intent = Intent(this, PastDeals::class.java)
+            startActivity(intent)
+
+        }
 
 
         //Underline txtMoreSpecs
@@ -61,12 +68,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        btnPastDeals.setOnClickListener {
-
-            val intent = Intent(this, PastDeals::class.java)
-            startActivity(intent)
-
-        }
 
     }
 
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                         txtDescription.text = fastDescription
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
-                       Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
+                       App.picasso.load(response.deal.photos[0]).into(imageDeal)
 
 
                         //Handles photos
@@ -106,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                             {
                                 i = 0
                             }
-                            Picasso.with(this@MainActivity).load(response.deal.photos[i]).into(imageDeal)
+                            App.picasso.load(response.deal.photos[i]).into(imageDeal)
 
                             i++
 

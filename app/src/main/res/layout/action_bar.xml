@@ -5,7 +5,17 @@
   >
 
 
-
+    <TextView
+        android:id="@+id/txtBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#222222"
+        />
     <TextView
         android:id="@+id/txtSettings"
         android:layout_width="wrap_content"

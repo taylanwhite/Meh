@@ -4,9 +4,7 @@ import java.util.ArrayList
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-open class Deal(fastTitle: String?, fastDescription: String?) {
-
-
+open class Deal(fastTitle: String?, fastDescription: String?, fastPicture: List<String>) {
 
 
     @SerializedName("features")
@@ -54,6 +52,10 @@ open class Deal(fastTitle: String?, fastDescription: String?) {
     var topic: Topic? = null
 
 
-
+    init {
+        title = fastTitle
+        features = fastDescription
+        photos = fastPicture
+    }
 
 }

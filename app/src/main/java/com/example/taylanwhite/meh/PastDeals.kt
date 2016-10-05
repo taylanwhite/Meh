@@ -10,10 +10,14 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.example.taylanwhite.meh.model.Deal
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_past_deals.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,11 +43,18 @@ open class PastDeals : AppCompatActivity() {
         mActionBar?.customView = mCustomView
         mActionBar?.setDisplayShowCustomEnabled(true)
         mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#A9A9A9")))
-        val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
-        mTitleTextView.text = "Settings"
+        val mTitleSettings = mCustomView.findViewById(R.id.txtSettings) as TextView
+        mTitleSettings.text = "Settings"
+        val mTitleBack = mCustomView.findViewById(R.id.txtBack) as TextView
+        mTitleBack.text = "Back"
 
-        mTitleTextView.setOnClickListener {
+        mTitleSettings.setOnClickListener {
             settingsFun()
+
+        }
+        mTitleBack.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
 
         }
 
@@ -59,18 +70,23 @@ open class PastDeals : AppCompatActivity() {
         setDealAdapter()
 
 
-        btnBack.setOnClickListener {
 
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
+        recyclerView.addOnItemTouchListener(RecyclerTouchListener(applicationContext, recyclerView, object : RecyclerTouchListener.ClickListener {
+            override fun onClick(view: View, position: Int) {
+                val deal = dealList[position]
+                Toast.makeText(applicationContext, deal.title + " is selected!", Toast.LENGTH_SHORT).show();
 
+            }
 
+            override fun onLongClick(view: View, position: Int) {
 
-        }
+            }
+        }))
 
 
 
     }
+
     fun settingsFun()
     {
 //            val container = findViewById(R.id.main_layout) as RelativeLayout
@@ -124,12 +140,22 @@ open class PastDeals : AppCompatActivity() {
                         val movieURL = response.video.url
                         val specURL = response.deal.topic?.url
                         val fastBackground = response.deal.theme?.backgroundColor
+                        var fastPicture =  response.deal.photos
 
 
-                        val deal = Deal(fastTitle, fastDescription)
+                        var deal = Deal(fastTitle, fastPrice, fastPicture)
                         dealList.add(deal)
-                        val deal1 = Deal(fastTitle, fastDescription)
-                        dealList.add(deal1)
+                        deal = Deal(fastTitle, fastPrice, fastPicture)
+                        dealList.add(deal)
+                       // deal = Deal()
+//                        deal = Deal(fastTitle, fastDescription)
+//                        dealList.add(deal)
+//                        deal = Deal(fastTitle, fastDescription)
+//                        dealList.add(deal)
+//                        deal = Deal(fastTitle, fastDescription)
+//                        dealList.add(deal)
+//                        deal = Deal(fastTitle, fastDescription)
+//                        dealList.add(deal)
 
                         mAdapter.notifyDataSetChanged()
 

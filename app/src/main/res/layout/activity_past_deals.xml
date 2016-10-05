@@ -8,15 +8,7 @@
     tools:context="com.example.taylanwhite.meh.PastDeals"
     >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/btnBack"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/textlines"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
