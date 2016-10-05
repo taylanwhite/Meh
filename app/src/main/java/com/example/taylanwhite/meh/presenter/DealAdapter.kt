@@ -1,4 +1,4 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.presenter
 
 
 import android.content.Context
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.taylanwhite.meh.App
+import com.example.taylanwhite.meh.R
 
 import com.example.taylanwhite.meh.model.Deal
 import com.squareup.picasso.Picasso

@@ -1,4 +1,5 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.presenter
+import com.example.taylanwhite.meh.model.DealObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,7 +22,7 @@ class MehService {
     interface MehInterface
     {
         @GET("current.json")
-        fun getDailyProduct(@Query("apikey")apiKey: String = "ZXzByssyPuglD85cLS1WJrwKda4ik9s0" ):Call<DealObject>
+        fun getDailyProduct(@Query("apikey")apiKey: String = "ZXzByssyPuglD85cLS1WJrwKda4ik9s0" ): Call<DealObject>
     }
 
 

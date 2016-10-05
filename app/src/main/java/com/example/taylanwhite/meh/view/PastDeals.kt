@@ -1,4 +1,4 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.view
 
 import android.app.Dialog
 import android.content.Intent
@@ -15,7 +15,13 @@ import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.example.taylanwhite.meh.presenter.DealAdapter
+import com.example.taylanwhite.meh.presenter.MehService
+import com.example.taylanwhite.meh.R
+import com.example.taylanwhite.meh.presenter.RecyclerTouchListener
 import com.example.taylanwhite.meh.model.Deal
+import com.example.taylanwhite.meh.model.DealObject
+import com.example.taylanwhite.meh.view.MainActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_past_deals.*
@@ -28,7 +34,7 @@ open class PastDeals : AppCompatActivity() {
 
     val dealList = ArrayList<Deal>()
     lateinit var recyclerView: RecyclerView
-    lateinit var mAdapter:DealAdapter
+    lateinit var mAdapter: DealAdapter
     var toggleChecked = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {

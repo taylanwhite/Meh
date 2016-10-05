@@ -1,4 +1,4 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.presenter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -11,17 +11,17 @@ import android.view.View
  */
 
 
-open class RecyclerTouchListener(context:Context, recyclerView:RecyclerView, clickListener:ClickListener):RecyclerView.OnItemTouchListener {
+open class RecyclerTouchListener(context: Context, recyclerView: RecyclerView, clickListener: ClickListener): RecyclerView.OnItemTouchListener {
 
-    private val gestureDetector:GestureDetector
-    private val clickListener:ClickListener
+    private val gestureDetector: GestureDetector
+    private val clickListener: ClickListener
     init{
         this.clickListener = clickListener
-        gestureDetector = GestureDetector(context, object:GestureDetector.SimpleOnGestureListener() {
-            override fun onSingleTapUp(e:MotionEvent):Boolean {
+        gestureDetector = GestureDetector(context, object: GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent):Boolean {
                 return true
             }
-            override fun onLongPress(e:MotionEvent) {
+            override fun onLongPress(e: MotionEvent) {
                 val child = recyclerView.findChildViewUnder(e.getX(), e.getY())
                 if (child != null && clickListener != null)
                 {
@@ -30,7 +30,7 @@ open class RecyclerTouchListener(context:Context, recyclerView:RecyclerView, cli
             }
         })
     }
-    override fun onInterceptTouchEvent(rv:RecyclerView, e:MotionEvent):Boolean {
+    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent):Boolean {
         val child = rv.findChildViewUnder(e.getX(), e.getY())
         if (child != null && clickListener != null && gestureDetector.onTouchEvent(e))
         {
@@ -38,12 +38,12 @@ open class RecyclerTouchListener(context:Context, recyclerView:RecyclerView, cli
         }
         return false
     }
-    override fun onTouchEvent(rv:RecyclerView, e:MotionEvent) {}
+    override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept:Boolean) {
     }
 
     interface ClickListener {
-        fun onClick(view:View, position:Int)
-        fun onLongClick(view:View, position:Int)
+        fun onClick(view: View, position:Int)
+        fun onLongClick(view: View, position:Int)
     }
 }

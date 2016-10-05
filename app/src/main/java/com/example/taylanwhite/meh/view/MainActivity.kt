@@ -1,4 +1,4 @@
-package com.example.taylanwhite.meh
+package com.example.taylanwhite.meh.view
 
 import android.app.*
 import android.content.ActivityNotFoundException
@@ -14,7 +14,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.*
+import com.example.taylanwhite.meh.App
+import com.example.taylanwhite.meh.presenter.DatabaseHelper
+import com.example.taylanwhite.meh.presenter.MehService
+import com.example.taylanwhite.meh.R
 import com.example.taylanwhite.meh.model.Deal
+import com.example.taylanwhite.meh.model.DealObject
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -79,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         val controller = DatabaseHelper(this)
 
-        MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject>{
+        MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject> {
 
             override fun onResponse(call: Call<DealObject>?, response: Response<DealObject>?) {
 
