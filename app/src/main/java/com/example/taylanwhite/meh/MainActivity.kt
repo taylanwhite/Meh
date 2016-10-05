@@ -16,13 +16,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
 
 
-
+    var toggleChecked = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         mActionBar?.setDisplayShowCustomEnabled(true)
         mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#A9A9A9")))
         val mTitleTextView = mCustomView.findViewById(R.id.txtSettings) as TextView
-
         mTitleTextView.text = "Settings"
 
         //handle loading screen
@@ -46,6 +44,9 @@ class MainActivity : AppCompatActivity() {
            settingsFun()
 
        }
+
+
+
 
 
 
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     fun fetchData()
     {
         var i = 1
+        var controller = DatabaseHelper(this)
 
         MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject>{
 
@@ -80,10 +82,16 @@ class MainActivity : AppCompatActivity() {
 
                 if(response?.isSuccessful ?: false) {
                     response?.body()!!.let { response ->
-
-                        txtName.text = response.deal.title
-                        txtPrice.text = "Price: $" + response.deal.items[0].price.toString()
-                        txtDescription.text = response.deal.features
+                        var fastTitle = response.deal.title
+                        var fastPrice = "Price: $" + response.deal.items[0].price.toString()
+                        var fastDescription = response.deal.features
+                        var buyURL = response.deal.url
+                        var movieURL = response.video.url
+                        var specURL = response.deal.topic?.url
+                        var fastBackground = response.deal.theme?.backgroundColor
+                        txtName.text = fastTitle
+                        txtPrice.text = fastPrice
+                        txtDescription.text = fastDescription
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
                        Picasso.with(this@MainActivity).load(response.deal.photos[0]).into(imageDeal)
@@ -109,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
                             try {
                                 val intent = Intent(Intent.ACTION_VIEW)
-                                intent.setData(Uri.parse(response.deal.url))
+                                intent.setData(Uri.parse(buyURL))
                                 startActivity(intent)
                             } catch (e: ActivityNotFoundException) {
                                 e.printStackTrace()
@@ -119,8 +127,7 @@ class MainActivity : AppCompatActivity() {
                         btnMovie.setOnClickListener {
                             try {
                             val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse(response.video.url)
-                            //    intent.data = Uri.parse(response.deal.video?.url)
+                                intent.data = Uri.parse(movieURL)
                             startActivity(intent)
                             } catch (e: ActivityNotFoundException) {
                                 e.printStackTrace()
@@ -131,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
                             try {
                                 val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse(response.deal.topic?.url)
+                                intent.data = Uri.parse(specURL)
                                 startActivity(intent)
                             } catch (e: ActivityNotFoundException) {
                                 e.printStackTrace()
@@ -143,34 +150,47 @@ class MainActivity : AppCompatActivity() {
                         btnNotification.setOnClickListener {
 
                             //setLargeIcon(image)
-                            val mBuilder = NotificationCompat.Builder(this@MainActivity).setAutoCancel(true).setSmallIcon(R.mipmap.notification_icon).setContentTitle(response.deal.title).setContentText("Price= $" + response.deal.items[0].price.toString())
+                            if((toggleChecked.equals("True"))) {
+                                val mBuilder = NotificationCompat.Builder(this@MainActivity).setAutoCancel(true).setSmallIcon(R.mipmap.notification_icon).setContentTitle(response.deal.title).setContentText("Price= $" + response.deal.items[0].price.toString())
 
-                            val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
+                                val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
 
 
-                            val resultPendingIntent = PendingIntent.getActivity(
-                                    this@MainActivity,
-                                    0,
-                                    resultIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT)
-                            mBuilder.setContentIntent(resultPendingIntent)
-                            // Sets an ID for the notification
-                            val mNotificationId = 1
-                            // Gets an instance of the NotificationManager service
-                            val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                            // Builds the notification and issues it.
-                            mNotifyMgr.notify(mNotificationId, mBuilder.build())
+                                val resultPendingIntent = PendingIntent.getActivity(
+                                        this@MainActivity,
+                                        0,
+                                        resultIntent,
+                                        PendingIntent.FLAG_UPDATE_CURRENT)
+                                mBuilder.setContentIntent(resultPendingIntent)
+                                // Sets an ID for the notification
+                                val mNotificationId = 1
+                                // Gets an instance of the NotificationManager service
+                                val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                                // Builds the notification and issues it.
+                                mNotifyMgr.notify(mNotificationId, mBuilder.build())
+                            }
 
 
                         }
 
                         //Handles theme layout
                         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
-                        currentLayout.setBackgroundColor(Color.parseColor(response.deal.theme?.backgroundColor))
+                        currentLayout.setBackgroundColor(Color.parseColor(fastBackground))
 //                        btnPastDeals.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
 //                        btnBuy.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
 //                        btnMovie.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
                         //btnClearData.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
+
+
+                                 controller.insert_deal(movieURL.toString(), fastTitle.toString(), fastPrice.toString(), fastDescription.toString(), specURL.toString(), buyURL.toString(), toggleChecked, response.deal.photos[0], fastBackground.toString()  )
+                        controller.list_all_deals()
+
+
+
+
+
+
+
 
 
 
@@ -199,9 +219,24 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
 
             //val btnDialogBack = findViewById(view.id.)
-            val btnToggleNots = dialog.findViewById(R.id.tglNotifications)
+            val btnToggleNot = dialog.findViewById(R.id.tglNotifications)
             val btnDialogBack = dialog.findViewById(R.id.btnDialogueBack)
             val clearData = dialog.findViewById(R.id.btnClearData)
+
+            btnToggleNot.setOnClickListener{
+
+                if(toggleChecked.equals("True")) {
+                    toggleChecked = "False"
+                }
+                else
+                {
+                    toggleChecked = "True"
+
+                }
+
+                    }
+
+
 
 
             btnDialogBack.setOnClickListener {
@@ -227,7 +262,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
 
 
