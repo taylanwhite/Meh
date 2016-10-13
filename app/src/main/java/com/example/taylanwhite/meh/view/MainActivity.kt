@@ -2,6 +2,7 @@ package com.example.taylanwhite.meh.view
 
 import android.app.*
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
@@ -9,18 +10,16 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.NotificationCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.*
+import com.dtp.simplemvp.database.DataConnection
 import com.example.taylanwhite.meh.App
 import com.example.taylanwhite.meh.presenter.DatabaseHelper
 import com.example.taylanwhite.meh.presenter.MehService
 import com.example.taylanwhite.meh.R
-import com.example.taylanwhite.meh.model.Deal
+//import com.example.taylanwhite.meh.model.Answer
 import com.example.taylanwhite.meh.model.DealObject
-import com.squareup.picasso.Picasso
+import com.example.taylanwhite.meh.presenter.AlarmReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,13 +29,14 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-
+    val controller = DatabaseHelper(this)
     var toggleChecked = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        loading_bar.visibility = View.VISIBLE
 
         val mActionBar = supportActionBar
         mActionBar?.setDisplayShowHomeEnabled(false)
@@ -48,21 +48,22 @@ class MainActivity : AppCompatActivity() {
         mActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#A9A9A9")))
         val mTitleSettings = mCustomView.findViewById(R.id.txtSettings) as TextView
         mTitleSettings.text = "Settings"
-        val mTitleBack = mCustomView.findViewById(R.id.txtBack) as TextView
-        mTitleBack.text = "Past Deals"
+        val mTitlePastDeals = mCustomView.findViewById(R.id.txtBack) as TextView
+        mTitlePastDeals.text = "Past Deals"
+        scheduleNotification()
 
 
 
-        //handle loading screen
-        loadingScreen()
+
 
         mTitleSettings.setOnClickListener {
             settingsFun()
 
         }
-        mTitleBack.setOnClickListener {
+        mTitlePastDeals.setOnClickListener {
 
             val intent = Intent(this, PastDeals::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
 
         }
@@ -72,31 +73,47 @@ class MainActivity : AppCompatActivity() {
         txtMoreSpecs.paintFlags = txtMoreSpecs.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
 
+            //
+            //Call function for data call
+            fetchData()
+            //close dialog when filled
 
+
+
+
+
+        loading_bar.visibility = View.GONE
 
     }
 
 
-    fun fetchData()
-    {
+    fun fetchData() {
         var i = 1
+        var t = 1
 
 
-        val controller = DatabaseHelper(this)
+        //val controller = DatabaseHelper(this)
+
+        loading_bar.visibility = View.VISIBLE
 
         MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject> {
 
             override fun onResponse(call: Call<DealObject>?, response: Response<DealObject>?) {
+                loading_bar.visibility = View.GONE
 
                 if(response?.isSuccessful ?: false) {
                     response?.body()!!.let { response ->
+
+
+
                         val fastTitle = response.deal.title
-                        val  fastPrice = "Price: $" + response.deal.items[0].price.toString()
+                        val  fastPrice = response.deal.items[0].price.toString()
                         val fastDescription = response.deal.features
                         val buyURL = response.deal.url
                         val movieURL = response.video.url
                         val specURL = response.deal.topic?.url
                         val fastBackground = response.deal.theme?.backgroundColor
+                        val fastPicture = response.deal.photos
                         txtName.text = fastTitle
                         txtPrice.text = fastPrice
                         txtDescription.text = fastDescription
@@ -153,32 +170,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-                        btnNotification.setOnClickListener {
-
-                            //setLargeIcon(image)
-                            if((toggleChecked.equals("True"))) {
-                                val mBuilder = NotificationCompat.Builder(this@MainActivity).setAutoCancel(true).setSmallIcon(R.mipmap.notification_icon).setContentTitle(response.deal.title).setContentText("Price= $" + response.deal.items[0].price.toString())
-
-                                val resultIntent = Intent(this@MainActivity, MainActivity::class.java)
-
-
-                                val resultPendingIntent = PendingIntent.getActivity(
-                                        this@MainActivity,
-                                        0,
-                                        resultIntent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT)
-                                mBuilder.setContentIntent(resultPendingIntent)
-                                // Sets an ID for the notification
-                                val mNotificationId = 1
-                                // Gets an instance of the NotificationManager service
-                                val mNotifyMgr = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                                // Builds the notification and issues it.
-                                mNotifyMgr.notify(mNotificationId, mBuilder.build())
-                            }
-
-
-                        }
-
                         //Handles theme layout
                         val currentLayout = findViewById(R.id.main_layout) as RelativeLayout
                         currentLayout.setBackgroundColor(Color.parseColor(fastBackground))
@@ -187,17 +178,26 @@ class MainActivity : AppCompatActivity() {
 //                        btnMovie.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
                         //btnClearData.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
 
-                                 controller.insert_deal(movieURL.toString(), fastTitle.toString(), fastPrice.toString(), fastDescription.toString(), specURL.toString(), buyURL.toString(), toggleChecked, response.deal.photos[0], fastBackground.toString()  )
-                        controller.list_all_deals()
+                        controller.insert_deal(movieURL.toString(), fastTitle.toString(), fastPrice, fastDescription.toString(), specURL.toString(), buyURL.toString(), fastBackground.toString()  )
+                        if (t <= response.deal.photos.size)
+                        {
+                            controller.insert_photo(response.deal.photos[t])
+                            t++
+                        }
 
 
 
+                        //controller.insert_price(fastPrice)
+                      //  controller.list_all_deals()
 
                     }
                 }
             }
             override fun onFailure(call: Call<DealObject>?, t: Throwable?) {
                 throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                loading_bar.visibility = View.GONE
+
             }
 
 
@@ -220,7 +220,8 @@ class MainActivity : AppCompatActivity() {
             //val btnDialogBack = findViewById(view.id.)
             val btnToggleNot = dialog.findViewById(R.id.tglNotifications)
             val btnDialogBack = dialog.findViewById(R.id.btnDialogueBack)
-            val clearData = dialog.findViewById(R.id.btnClearData)
+            val btnClearData = dialog.findViewById(R.id.btnClearData)
+
 
             btnToggleNot.setOnClickListener{
 
@@ -234,6 +235,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                     }
+//
+//                btnClearData.setOnClickListener {
+//                    db.execSQL("TRUNCATE table" + TABLE_NAME)
+//                    db.close()
+//                }
 
 
 
@@ -244,23 +250,36 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-    fun loadingScreen()
-    {
-        if(txtName.text.toString().trim().length == 0)
-        {
-            val dialog = Dialog(this@MainActivity)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.loading_layout)
-            dialog.show()
+    fun scheduleNotification() {
+//         The time at which the alarm will be scheduled. Here the alarm is scheduled for 1 day from the current time.
+//         We fetch the current time in milliseconds and add 1 day's time
+//         i.e. 24*60*60*1000 = 86,400,000 milliseconds in a day.
+        //val time = GregorianCalendar().timeInMillis + 24 * 60 * 60 * 1000
+
+        val cur_cal = GregorianCalendar()
+        cur_cal.timeInMillis = System.currentTimeMillis()
+
+        val cal = GregorianCalendar()
+        cal.add(Calendar.DAY_OF_YEAR, cur_cal.get(Calendar.DAY_OF_YEAR))
+        cal.set(Calendar.HOUR_OF_DAY, 24)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+
+        // Create an Intent and set the class that will execute when the Alarm triggers. Here we have
+        // specified AlarmReceiver in the Intent. The onReceive() method of this class will execute when the broadcast from your alarm is received.
+        val intentAlarm = Intent(this, AlarmReceiver::class.java)
+
+        // Get the Alarm Service.
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
-            //Call function for data call
-            fetchData()
-
-            dialog.cancel()
-        }
-
+//         Set the alarm for a particular time.
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT))
+        //Toast.makeText(this, "Notification Scheduled for Tomorrow", Toast.LENGTH_LONG).show()
     }
+
+
 
 
 

@@ -42,22 +42,6 @@
                 />
 
 
-            <!--<Button-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Test Notification"-->
-                <!--android:id="@+id/btnNotication"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_weight="0.61" />-->
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Notifications"
-                android:id="@+id/btnNotification"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.61" />
-
             <ImageButton
                 android:id="@+id/imageDeal"
                 android:layout_width="match_parent"
@@ -126,4 +110,11 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/loading_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 </RelativeLayout>

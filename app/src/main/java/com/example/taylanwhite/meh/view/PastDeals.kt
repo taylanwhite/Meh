@@ -21,10 +21,7 @@ import com.example.taylanwhite.meh.R
 import com.example.taylanwhite.meh.presenter.RecyclerTouchListener
 import com.example.taylanwhite.meh.model.Deal
 import com.example.taylanwhite.meh.model.DealObject
-import com.example.taylanwhite.meh.view.MainActivity
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_past_deals.*
+import com.example.taylanwhite.meh.presenter.DatabaseHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,6 +57,7 @@ open class PastDeals : AppCompatActivity() {
         }
         mTitleBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent)
 
         }
@@ -80,7 +78,7 @@ open class PastDeals : AppCompatActivity() {
         recyclerView.addOnItemTouchListener(RecyclerTouchListener(applicationContext, recyclerView, object : RecyclerTouchListener.ClickListener {
             override fun onClick(view: View, position: Int) {
                 val deal = dealList[position]
-                Toast.makeText(applicationContext, deal.title + " is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(applicationContext, deal.title + " is selected!", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -147,8 +145,10 @@ open class PastDeals : AppCompatActivity() {
                         val specURL = response.deal.topic?.url
                         val fastBackground = response.deal.theme?.backgroundColor
                         var fastPicture =  response.deal.photos
-
-
+//                        val myDatabaseHelper = DatabaseHelper(this@PastDeals)
+//
+//                        myDatabaseHelper.openDataBase()
+//Setting up past deals tab
                         var deal = Deal(fastTitle, fastPrice, fastPicture)
                         dealList.add(deal)
                         deal = Deal(fastTitle, fastPrice, fastPicture)

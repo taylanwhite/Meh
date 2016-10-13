@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         android:text="Clear Data"
         android:id="@+id/btnClearData"
-        android:layout_marginTop="105dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="125dp"
+        android:layout_marginBottom="0dp"
         android:layout_centerHorizontal="true"/>
 
 

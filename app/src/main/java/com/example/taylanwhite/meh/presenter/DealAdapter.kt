@@ -1,7 +1,6 @@
 package com.example.taylanwhite.meh.presenter
 
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import com.example.taylanwhite.meh.App
 import com.example.taylanwhite.meh.R
 
 import com.example.taylanwhite.meh.model.Deal
-import com.squareup.picasso.Picasso
 
 class DealAdapter(private val dealList: List<Deal>) : RecyclerView.Adapter<DealAdapter.MyViewHolder>() {
 
