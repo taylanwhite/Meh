@@ -18,8 +18,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
 
 
-        sqLiteDatabase.execSQL("create table DEALTABLE(deal_id integer PRIMARY KEY, VIDEO TEXT, photo_id integer NOT NULL, FOREIGN KEY (photo_id) REFERENCES DEALPHOTO(photo_id), NAME TEXT, PRICE TEXT, DESCRIPTION TEXT, SPECIFICATION TEXT, BUY TEXT, COLOR TEXT)" )
-        sqLiteDatabase.execSQL("create table DEALPHOTO(photo_id integer PRIMARY KEY, PHOTO TEXT)")
+//        sqLiteDatabase.execSQL("create table DEALTABLE(deal_id integer PRIMARY KEY, VIDEO TEXT, photo_id integer NOT NULL, FOREIGN KEY (photo_id) REFERENCES DEALPHOTO(photo_id), NAME TEXT, PRICE TEXT, DESCRIPTION TEXT, SPECIFICATION TEXT, BUY TEXT, COLOR TEXT)" )
+//        sqLiteDatabase.execSQL("create table DEALPHOTO(photo_id integer PRIMARY KEY, PHOTO TEXT)")
+        sqLiteDatabase.execSQL("create table DEALTABLE(DEAL_ID TEXT, VIDEO TEXT, NAME TEXT, PRICE TEXT, DESCRIPTION TEXT, SPECIFICATION TEXT, BUY TEXT, COLOR TEXT)" )
+        sqLiteDatabase.execSQL("create table DEALPHOTO(DEAL_ID TEXT, PHOTOURL TEXT)")
 
     }
 
@@ -30,8 +32,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
     }
 
 
-    fun insert_deal(video:String, name:String, price:String, description:String, specification:String, buy:String,  color:String) {
+    fun insert_deal(deal_id:String, video:String, name:String, price:String, description:String, specification:String, buy:String,  color:String) {
         var contentValues = ContentValues()
+        contentValues.put("DEAL_ID", deal_id)
         contentValues.put("VIDEO", video)
         contentValues.put("NAME", name)
         contentValues.put("PRICE", price)
@@ -44,9 +47,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
     }
 
 
-    fun insert_photo(photo:String){
+    fun insert_photo(deal_id:String, photoUrl:String){
         var contentValues = ContentValues()
-        contentValues.put("PHOTO", photo)
+        contentValues.put("DEAL_ID", deal_id)
+        contentValues.put("PHOTOURL", photoUrl)
         this.writableDatabase.insertOrThrow("DEALPHOTO", "", contentValues)
     }
 

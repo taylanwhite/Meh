@@ -20,6 +20,7 @@ import com.example.taylanwhite.meh.R
 //import com.example.taylanwhite.meh.model.Answer
 import com.example.taylanwhite.meh.model.DealObject
 import com.example.taylanwhite.meh.presenter.AlarmReceiver
+import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     fun fetchData() {
         var i = 1
-        var t = 1
+        var t = 0
 
 
         //val controller = DatabaseHelper(this)
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                         txtDescription.text = fastDescription
                         //imageDeal.setImageResource() =
                        //response.deal.items[0].photo?.
+                        response.deal.id
                        App.picasso.load(response.deal.photos[0]).into(imageDeal)
 
 
@@ -178,13 +180,14 @@ class MainActivity : AppCompatActivity() {
 //                        btnMovie.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
                         //btnClearData.setBackgroundColor(Color.parseColor(response.deal.theme?.accentColor))
 
-                        controller.insert_deal(movieURL.toString(), fastTitle.toString(), fastPrice, fastDescription.toString(), specURL.toString(), buyURL.toString(), fastBackground.toString()  )
-                        if (t <= response.deal.photos.size)
+                        controller.insert_deal(response.deal.id!!, movieURL.toString(), fastTitle.toString(), fastPrice, fastDescription.toString(), specURL.toString(), buyURL.toString(), fastBackground.toString()  )
+                        for (item in response.deal.photos) //(t <= response.deal.photos.size)
                         {
-                            controller.insert_photo(response.deal.photos[t])
-                            t++
-                        }
+                            controller.insert_photo(response.deal.id!!, item)
 
+                        }
+                   // remove this when finished
+                            Stetho.initializeWithDefaults(this@MainActivity)
 
 
                         //controller.insert_price(fastPrice)
