@@ -12,7 +12,7 @@ import com.example.taylanwhite.meh.R
 
 import com.example.taylanwhite.meh.model.Deal
 
-class DealAdapter(private val dealList: List<Deal>) : RecyclerView.Adapter<DealAdapter.MyViewHolder>() {
+class DealAdapter(private val dealList: List<String>) : RecyclerView.Adapter<DealAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var deal_name: TextView
@@ -33,10 +33,11 @@ class DealAdapter(private val dealList: List<Deal>) : RecyclerView.Adapter<DealA
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val deal = dealList[position]
-        App.picasso.load(deal.photos[0]).into(holder.deal_image);
-        holder.deal_name.text = deal.title
-        holder.deal_features.text = deal.features
+
+
+        holder.deal_name.text = dealList[0]
+        holder.deal_features.text = dealList[1]
+        App.picasso.load(dealList[2]).into(holder.deal_image)
 
     }
 

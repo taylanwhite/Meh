@@ -4,32 +4,26 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
-import com.example.taylanwhite.meh.presenter.DealAdapter
-import com.example.taylanwhite.meh.presenter.MehService
 import com.example.taylanwhite.meh.R
-import com.example.taylanwhite.meh.presenter.RecyclerTouchListener
-import com.example.taylanwhite.meh.model.Deal
-import com.example.taylanwhite.meh.model.DealObject
 import com.example.taylanwhite.meh.presenter.DatabaseHelper
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.taylanwhite.meh.presenter.DealAdapter
+import com.example.taylanwhite.meh.presenter.RecyclerTouchListener
 import java.util.*
 
 open class PastDeals : AppCompatActivity() {
 
-    val dealList = ArrayList<Deal>()
+    val dealList = ArrayList<String>()
     lateinit var recyclerView: RecyclerView
     lateinit var mAdapter: DealAdapter
     var toggleChecked = ""
@@ -78,7 +72,7 @@ open class PastDeals : AppCompatActivity() {
         recyclerView.addOnItemTouchListener(RecyclerTouchListener(applicationContext, recyclerView, object : RecyclerTouchListener.ClickListener {
             override fun onClick(view: View, position: Int) {
                 val deal = dealList[position]
-                Toast.makeText(applicationContext, deal.title + " is selected!", Toast.LENGTH_SHORT).show()
+            //    Toast.makeText(applicationContext, deal. + " is selected!", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -128,49 +122,46 @@ open class PastDeals : AppCompatActivity() {
 
     fun setDealAdapter(){
 
-        MehService.retrofit.getDailyProduct().enqueue(object: Callback<DealObject> {
-            override fun onFailure(call: Call<DealObject>?, t: Throwable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+                        val myDatabaseHelper = DatabaseHelper(this@PastDeals)
+                        val data =  myDatabaseHelper.get_all_deals()
 
-            override fun onResponse(call: Call<DealObject>?, response: Response<DealObject>?) {
+        for (item in data) {
 
-                if (response?.isSuccessful ?: false) {
-                    response?.body()!!.let { response ->
-                        val fastTitle = response.deal.title
-                        val fastPrice = "Price: $" + response.deal.items[0].price.toString()
-                        val fastDescription = response.deal.features
-                        val buyURL = response.deal.url
-                        val movieURL = response.video.url
-                        val specURL = response.deal.topic?.url
-                        val fastBackground = response.deal.theme?.backgroundColor
-                        var fastPicture =  response.deal.photos
-//                        val myDatabaseHelper = DatabaseHelper(this@PastDeals)
-//
-//                        myDatabaseHelper.openDataBase()
-//Setting up past deals tab
-                        var deal = Deal(fastTitle, fastPrice, fastPicture)
-                        dealList.add(deal)
-                        deal = Deal(fastTitle, fastPrice, fastPicture)
-                        dealList.add(deal)
-                       // deal = Deal()
-//                        deal = Deal(fastTitle, fastDescription)
-//                        dealList.add(deal)
-//                        deal = Deal(fastTitle, fastDescription)
-//                        dealList.add(deal)
-//                        deal = Deal(fastTitle, fastDescription)
-//                        dealList.add(deal)
-//                        deal = Deal(fastTitle, fastDescription)
+            print(item.deal.title)
+            // val fastTitle = cursorDeal.getString(cursorDeal.getColumnIndex("NAME"))
+            val fastTitle = item.deal.title.toString()
+            val fastPrice = item.deal.items[0].price.toString()
+            val fastPicture = item.deal.photos
+            // val fastPrice = cursorDeal.getString(cursorDeal.getColumnIndex("PRICE"))
+//                        val fastDescription = response.deal.features
+//                        val buyURL = response.deal.url
+//                        val movieURL = response.video.url
+//                        val specURL = response.deal.topic?.url
+            val fastBackground = item.deal.theme
+            // var fastPicture =  cursorDeal.getString(cursorDeal.getColumnIndex("PHOTOURL"))
+
+
+            val dealList = ArrayList<String>()
+            //var deal = Deal(fastTitle, fastPrice, fastPicture)
+            dealList.add(data[0].deal.title.toString())
+            dealList.add(data[0].deal.items[0].price.toString())
+            dealList.add(data[0].deal.photos[0])
+            //  data[0].deal.items
+            // dealList.add(fastPicture)
+
+
+
+            //  dealList.add(deal.toString())
+//                        deal = Deal(fastTitle, fastPrice, fastPicture)
 //                        dealList.add(deal)
 
-                        mAdapter.notifyDataSetChanged()
 
-                        val currentLayout = findViewById(R.id.past_layout) as RelativeLayout
-                        currentLayout.setBackgroundColor(Color.parseColor(fastBackground))
+            mAdapter.notifyDataSetChanged()
+
+            val currentLayout = findViewById(R.id.past_layout) as RelativeLayout
+            currentLayout.setBackgroundColor(Color.parseColor(fastBackground.toString()))
+        }
+
                     }
 
-
-                }
-            }
-        })
-    }}
+    }

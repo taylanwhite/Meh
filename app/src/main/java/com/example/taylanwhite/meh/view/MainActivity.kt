@@ -1,25 +1,29 @@
 package com.example.taylanwhite.meh.view
 
-import android.app.*
+//import com.example.taylanwhite.meh.model.Answer
+import android.app.AlarmManager
+import android.app.Dialog
+import android.app.PendingIntent
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.NotificationCompat
-import android.view.*
-import android.widget.*
-import com.dtp.simplemvp.database.DataConnection
+import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.Window
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.example.taylanwhite.meh.App
-import com.example.taylanwhite.meh.presenter.DatabaseHelper
-import com.example.taylanwhite.meh.presenter.MehService
 import com.example.taylanwhite.meh.R
-//import com.example.taylanwhite.meh.model.Answer
 import com.example.taylanwhite.meh.model.DealObject
 import com.example.taylanwhite.meh.presenter.AlarmReceiver
+import com.example.taylanwhite.meh.presenter.DatabaseHelper
+import com.example.taylanwhite.meh.presenter.MehService
 import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -90,7 +94,6 @@ class MainActivity : AppCompatActivity() {
 
     fun fetchData() {
         var i = 1
-        var t = 0
 
 
         //val controller = DatabaseHelper(this)
