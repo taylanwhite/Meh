@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteQueryBuilder
 import com.dtp.simplemvp.database.table.TableBuilder
-import com.example.taylanwhite.meh.model.Deal
-import com.example.taylanwhite.meh.model.DealObject
-import com.example.taylanwhite.meh.model.Item
-import com.example.taylanwhite.meh.model.Video
+import com.example.taylanwhite.meh.model.*
 import java.lang.reflect.Array
 import java.util.*
 
@@ -20,6 +17,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
 
     companion object {
         //deal object
+        val ID = "ID"
         val VIDEO = "VIDEO"
         val NAME = "NAME"
         val PRICE = "PRICE"
@@ -76,7 +74,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
     fun delete_deal(video:String, photo:String){
 
         this.writableDatabase.delete("DEALTABLE", "VIDEO=?", arrayOf(video))
-        this.writableDatabase.delete("DEALPHOTO", "PHOTO=?", arrayOf(photo))
+        this.writableDatabase.delete("DEALPHOTO", "PHOTO_URL=?", arrayOf(photo))
 
     }
 
@@ -85,32 +83,24 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
         this.writableDatabase.execSQL("UPDATE DEALPHOTO SET PRICE='$newPhoto' WHERE PRICE='$oldPhoto'")
     }
 
-//    fun list_certain_deals() : List<Deal>
-//    {
-//        var deals = ArrayList<Deal>()
-//
-//        var cursor = this.readableDatabase.query("DEALTABLE", null, null, null, null, null, null)
-//    }
+
     fun get_all_deals() : List<DealObject> {
 
         var deals = ArrayList<DealObject>()
 
-//        val query = "SELECT * FROM DEALTABLE"
-//
-//        val cursor = this.readableDatabase.rawQuery(query, null)
+        val query = "SELECT * FROM DEALTABLE"
 
-        val cursor = this.readableDatabase.query("DEALTABLE", null, null, null, null, null, null)
+        val cursor = this.readableDatabase.rawQuery(query, null)
+     //   val cursor = this.readableDatabase.query("DEALTABLE", null, null, null, null, null, null)
 
         while(cursor.moveToNext()) {
             val dealId = cursor.getString(cursor.getColumnIndex("DEAL_ID"))
-            val fastURL = cursor.getString(cursor.getColumnIndex("$VIDEO"))
 
 
 
             var tmpDeal = Deal()
             var tmpVideo = Video()
             var photoCursor = this.readableDatabase.query("DEALPHOTO", null, "DEAL_ID=?", arrayOf(dealId), null, null, null)
-
             val photos = mutableListOf<String>()
             while(photoCursor.moveToNext()) {
                  photos.add(photoCursor.getString(photoCursor.getColumnIndex(PHOTO_URL)))
@@ -119,6 +109,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "com.example.
             tmpDeal.photos = photos
 
 
+            //Theme and topic are null, next time, add the object to the database like photos was added
+            tmpDeal.theme = Theme()
+            tmpDeal.topic = Topic()
+
+            tmpDeal.id = cursor.getString(cursor.getColumnIndex("DEAL_ID"))
             tmpVideo.url = cursor.getString(cursor.getColumnIndex("$VIDEO"))
             tmpDeal.title = cursor.getString(cursor.getColumnIndex("$NAME"))
             tmpDeal.items = listOf(Item().apply { price = cursor.getInt(cursor.getColumnIndex(PRICE)) })

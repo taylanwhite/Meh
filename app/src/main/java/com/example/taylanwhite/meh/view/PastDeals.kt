@@ -1,9 +1,11 @@
 package com.example.taylanwhite.meh.view
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
@@ -13,17 +15,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import com.example.taylanwhite.meh.App
 import com.example.taylanwhite.meh.R
+import com.example.taylanwhite.meh.model.Deal
+import com.example.taylanwhite.meh.model.DealObject
 import com.example.taylanwhite.meh.presenter.DatabaseHelper
 import com.example.taylanwhite.meh.presenter.DealAdapter
 import com.example.taylanwhite.meh.presenter.RecyclerTouchListener
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_past.*
+import kotlinx.android.synthetic.main.deal_list_row.*
+import kotlinx.android.synthetic.main.loading_layout.view.*
 import java.util.*
 
 open class PastDeals : AppCompatActivity() {
 
-    val dealList = ArrayList<String>()
+    val dealList = ArrayList<DealObject>()
+
     lateinit var recyclerView: RecyclerView
     lateinit var mAdapter: DealAdapter
     var toggleChecked = ""
@@ -33,6 +45,7 @@ open class PastDeals : AppCompatActivity() {
         setContentView(R.layout.activity_past_deals)
 
         val mActionBar = supportActionBar
+
         mActionBar?.setDisplayShowHomeEnabled(false)
         mActionBar?.setDisplayShowTitleEnabled(false)
         val mInflater = LayoutInflater.from(this)
@@ -44,6 +57,10 @@ open class PastDeals : AppCompatActivity() {
         mTitleSettings.text = "Settings"
         val mTitleBack = mCustomView.findViewById(R.id.txtBack) as TextView
         mTitleBack.text = "Back"
+
+
+
+
 
         mTitleSettings.setOnClickListener {
             settingsFun()
@@ -57,9 +74,10 @@ open class PastDeals : AppCompatActivity() {
         }
 
 
-        recyclerView = findViewById(R.id.recycler_view) as RecyclerView
 
+        recyclerView = findViewById(R.id.recycler_view) as RecyclerView
         mAdapter = DealAdapter(dealList)
+
         val mLayoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = mLayoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -71,12 +89,37 @@ open class PastDeals : AppCompatActivity() {
 
         recyclerView.addOnItemTouchListener(RecyclerTouchListener(applicationContext, recyclerView, object : RecyclerTouchListener.ClickListener {
             override fun onClick(view: View, position: Int) {
-                val deal = dealList[position]
-            //    Toast.makeText(applicationContext, deal. + " is selected!", Toast.LENGTH_SHORT).show()
 
+                val deal = dealList[position]
+                val intent = Intent(this@PastDeals, PastDealsMain::class.java)
+
+
+                deal.deal.topic?.url
+
+                intent.putExtra("id", deal.deal.id)
+                intent.putExtra("video", deal.video.url)
+                intent.putExtra("title", deal.deal.title)
+                intent.putExtra("price", deal.deal.items[0].price)
+                intent.putExtra("features", deal.deal.features)
+                intent.putExtra("specs", deal.deal.topic?.url)
+                intent.putExtra("buy", deal.deal.url)
+                intent.putExtra("theme", deal.deal.theme?.backgroundColor)
+                if(deal.deal.photos[0] != null) intent.putExtra("photo1", deal.deal.photos[0])
+                if(deal.deal.photos[1] != null) intent.putExtra("photo2", deal.deal.photos[1])
+                if(deal.deal.photos[2] != null) intent.putExtra("photo3", deal.deal.photos[2])
+                if(deal.deal.photos[3] != null) intent.putExtra("photo4", deal.deal.photos[3])
+                if(deal.deal.photos[4] != null) intent.putExtra("photo5", deal.deal.photos[4])
+
+
+
+                //Add your data from getFactualResults method to bundle
+                //Add the bundle to the intent
+                startActivity(intent)
+             //   Toast.makeText(applicationContext, deal , Toast.LENGTH_SHORT).show()
             }
 
             override fun onLongClick(view: View, position: Int) {
+
 
             }
         }))
@@ -122,46 +165,23 @@ open class PastDeals : AppCompatActivity() {
 
     fun setDealAdapter(){
 
-                        val myDatabaseHelper = DatabaseHelper(this@PastDeals)
-                        val data =  myDatabaseHelper.get_all_deals()
+        val myDatabaseHelper = DatabaseHelper(this@PastDeals)
+        val data =  myDatabaseHelper.get_all_deals()
+
 
         for (item in data) {
-
-            print(item.deal.title)
-            // val fastTitle = cursorDeal.getString(cursorDeal.getColumnIndex("NAME"))
-            val fastTitle = item.deal.title.toString()
-            val fastPrice = item.deal.items[0].price.toString()
-            val fastPicture = item.deal.photos
-            // val fastPrice = cursorDeal.getString(cursorDeal.getColumnIndex("PRICE"))
-//                        val fastDescription = response.deal.features
-//                        val buyURL = response.deal.url
-//                        val movieURL = response.video.url
-//                        val specURL = response.deal.topic?.url
-            val fastBackground = item.deal.theme
-            // var fastPicture =  cursorDeal.getString(cursorDeal.getColumnIndex("PHOTOURL"))
-
-
-            val dealList = ArrayList<String>()
-            //var deal = Deal(fastTitle, fastPrice, fastPicture)
-            dealList.add(data[0].deal.title.toString())
-            dealList.add(data[0].deal.items[0].price.toString())
-            dealList.add(data[0].deal.photos[0])
-            //  data[0].deal.items
-            // dealList.add(fastPicture)
-
-
-
-            //  dealList.add(deal.toString())
-//                        deal = Deal(fastTitle, fastPrice, fastPicture)
-//                        dealList.add(deal)
-
+            dealList.add(item)
+            //reverse arraylist to show todays deal first
+            Collections.reverse(dealList)
 
             mAdapter.notifyDataSetChanged()
 
-            val currentLayout = findViewById(R.id.past_layout) as RelativeLayout
-            currentLayout.setBackgroundColor(Color.parseColor(fastBackground.toString()))
+//            val currentLayout = findViewById(R.id.past_layout) as RelativeLayout
+//            currentLayout.setBackgroundColor(Color.parseColor(fastBackground.toString()))
         }
 
                     }
+
+
 
     }

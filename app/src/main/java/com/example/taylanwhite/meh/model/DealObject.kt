@@ -6,7 +6,7 @@ import com.example.taylanwhite.meh.model.Video
 /**
  * Created by taylanwhite on 9/21/16.
  */
-class DealObject(
+class DealObject (
         var deal: Deal,
         var video: Video
 )
